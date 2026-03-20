@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Member - {{ member.first_name }} {{ member.last_name }}{% endblock %}
+
+{% block content %}
+<h1>Edit Member</h1>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="last_name">Last Name *</label>
+        <input type="text" id="last_name" name="last_name" value="{{ member.last_name }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="first_name">First Name *</label>
+        <input type="text" id="first_name" name="first_name" value="{{ member.first_name }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="date_of_birth">Date of Birth *</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" value="{{ member.date_of_birth }}" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="username">Username (cannot be changed)</label>
+        <input type="text" id="username" name="username" value="{{ member.username }}" disabled style="background: #f0f0f0;">
+    </div>
+    
+    <div class="form-group">
+        <label for="password">New Password (leave blank to keep current)</label>
+        <input type="password" id="password" name="password" placeholder="Enter new password or leave blank">
+    </div>
+    
+    <div class="form-group">
+        <label for="secret">Secret (stored in Vault)</label>
+        <textarea id="secret" name="secret" rows="3" placeholder="Update secret or leave blank to keep current">{{ secret if secret else '' }}</textarea>
+    </div>
+    
+    <div class="actions">
+        <button type="submit" class="btn">Update Member</button>
+        <a href="/member/{{ member.id }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,145 @@
+---
+- name: Undeploy Member Management Application
+  hosts: localhost
+  gather_facts: no
+  
+  tasks:
+    - name: Delete application deployment
+      kubernetes.core.k8s:
+        state: absent
+        api_version: apps/v1
+        kind: Deployment
+        name: member-management-app
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete application service
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: member-management-app
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Grafana deployment
+      kubernetes.core.k8s:
+        state: absent
+        api_version: apps/v1
+        kind: Deployment
+        name: grafana
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Grafana service
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: grafana
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Prometheus deployment
+      kubernetes.core.k8s:
+        state: absent
+        api_version: apps/v1
+        kind: Deployment
+        name: prometheus
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Prometheus service
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: prometheus
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete OpenTelemetry Collector deployment
+      kubernetes.core.k8s:
+        state: absent
+        api_version: apps/v1
+        kind: Deployment
+        name: otel-collector
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete OpenTelemetry Collector service
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: otel-collector
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Vault deployment
+      kubernetes.core.k8s:
+        state: absent
+        api_version: apps/v1
+        kind: Deployment
+        name: vault
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete Vault service
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Service
+        name: vault
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete PVCs
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: PersistentVolumeClaim
+        name: "{{ item }}"
+        namespace: "{{ namespace }}"
+      loop:
+        - app-data-pvc
+        - prometheus-data-pvc
+        - grafana-data-pvc
+      ignore_errors: yes
+
+    - name: Delete ConfigMaps
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: ConfigMap
+        name: "{{ item }}"
+        namespace: "{{ namespace }}"
+      loop:
+        - app-config
+        - otel-collector-config
+        - prometheus-config
+        - grafana-datasources
+      ignore_errors: yes
+
+    - name: Delete Secrets
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Secret
+        name: app-secrets
+        namespace: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Delete namespace
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Namespace
+        name: "{{ namespace }}"
+      ignore_errors: yes
+
+    - name: Confirm undeployment
+      debug:
+        msg: "Member Management Application has been undeployed from {{ namespace }} namespace"
+
+# Made with Bob

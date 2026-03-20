@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: member-management
+data:
+  DATABASE_PATH: "/data/members.db"
+  PORT: "8080"
+  VAULT_ADDR: "http://vault:8200"
+  VAULT_MOUNT_POINT: "secret"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: member-management
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch:
+        timeout: 10s
+        send_batch_size: 1024
+      
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 512
+
+    exporters:
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+        namespace: member_management
+        const_labels:
+          service: member-management-app
+      
+      logging:
+        loglevel: debug
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [logging]
+        
+        metrics:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [prometheus, logging]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: member-management
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'member-management'
+        environment: 'production'
+
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
+      - job_name: 'otel-collector'
+        static_configs:
+          - targets: ['otel-collector:8888']
+            labels:
+              service: 'otel-collector'
+
+      - job_name: 'member-management-app'
+        static_configs:
+          - targets: ['otel-collector:8889']
+            labels:
+              service: 'member-management-app'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: member-management
+data:
+  datasources.yml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus:9090
+        isDefault: true
+        editable: true
+        jsonData:
+          timeInterval: "15s"
+
+# Made with Bob

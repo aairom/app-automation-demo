@@ -1,0 +1,89 @@
+---
+- name: Deploy Member Management Application
+  hosts: localhost
+  gather_facts: yes
+  
+  tasks:
+    - name: Check if Minikube is running
+      command: minikube status
+      register: minikube_status
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Start Minikube if not running
+      command: minikube start
+      when: minikube_status.rc != 0
+
+    - name: Build Docker image
+      command: docker build -t {{ docker_image }}:{{ docker_tag }} {{ project_root }}
+      args:
+        chdir: "{{ project_root }}"
+
+    - name: Load Docker image into Minikube
+      command: minikube image load {{ docker_image }}:{{ docker_tag }}
+
+    - name: Create namespace
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: "{{ namespace }}"
+            labels:
+              name: "{{ namespace }}"
+              app: "{{ namespace }}"
+
+    - name: Apply Kubernetes manifests
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        namespace: "{{ namespace }}"
+      loop:
+        - "{{ project_root }}/k8s/configmap.yaml"
+        - "{{ project_root }}/k8s/secrets.yaml"
+        - "{{ project_root }}/k8s/pvc.yaml"
+        - "{{ project_root }}/k8s/vault-deployment.yaml"
+        - "{{ project_root }}/k8s/otel-collector-deployment.yaml"
+        - "{{ project_root }}/k8s/prometheus-deployment.yaml"
+        - "{{ project_root }}/k8s/grafana-deployment.yaml"
+        - "{{ project_root }}/k8s/app-deployment.yaml"
+
+    - name: Wait for Vault to be ready
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: "{{ namespace }}"
+        label_selectors:
+          - app=vault
+        wait: yes
+        wait_condition:
+          type: Ready
+          status: "True"
+        wait_timeout: 300
+
+    - name: Wait for application to be ready
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: "{{ namespace }}"
+        label_selectors:
+          - app=member-management-app
+        wait: yes
+        wait_condition:
+          type: Ready
+          status: "True"
+        wait_timeout: 300
+
+    - name: Get Minikube IP
+      command: minikube ip
+      register: minikube_ip
+      changed_when: false
+
+    - name: Display access URLs
+      debug:
+        msg:
+          - "Application URL: http://{{ minikube_ip.stdout }}:30080"
+          - "Prometheus URL: http://{{ minikube_ip.stdout }}:30090"
+          - "Grafana URL: http://{{ minikube_ip.stdout }}:30030"
+          - "Grafana credentials: admin/admin"
+
+# Made with Bob

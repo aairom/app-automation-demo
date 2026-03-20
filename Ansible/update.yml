@@ -1,0 +1,42 @@
+---
+- name: Update Member Management Application
+  hosts: localhost
+  gather_facts: yes
+  
+  tasks:
+    - name: Build new Docker image
+      command: docker build -t {{ docker_image }}:{{ docker_tag }} {{ project_root }}
+      args:
+        chdir: "{{ project_root }}"
+
+    - name: Load new Docker image into Minikube
+      command: minikube image load {{ docker_image }}:{{ docker_tag }}
+
+    - name: Update ConfigMaps
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ project_root }}/k8s/configmap.yaml"
+        namespace: "{{ namespace }}"
+
+    - name: Restart application deployment
+      command: kubectl rollout restart deployment/member-management-app -n {{ namespace }}
+
+    - name: Wait for rollout to complete
+      command: kubectl rollout status deployment/member-management-app -n {{ namespace }}
+      register: rollout_status
+      until: rollout_status.rc == 0
+      retries: 10
+      delay: 10
+
+    - name: Get Minikube IP
+      command: minikube ip
+      register: minikube_ip
+      changed_when: false
+
+    - name: Display access URLs
+      debug:
+        msg:
+          - "Application has been updated successfully"
+          - "Application URL: http://{{ minikube_ip.stdout }}:30080"
+
+# Made with Bob

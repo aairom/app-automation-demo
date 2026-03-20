@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: member-management-app
+  namespace: member-management
+  labels:
+    app: member-management-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: member-management-app
+  template:
+    metadata:
+      labels:
+        app: member-management-app
+    spec:
+      containers:
+      - name: app
+        image: member-management-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: DATABASE_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: DATABASE_PATH
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: PORT
+        - name: VAULT_ADDR
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: VAULT_ADDR
+        - name: VAULT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: VAULT_TOKEN
+        - name: VAULT_MOUNT_POINT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: VAULT_MOUNT_POINT
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: OTEL_EXPORTER_OTLP_ENDPOINT
+        - name: FLASK_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: FLASK_SECRET_KEY
+        volumeMounts:
+        - name: app-data
+          mountPath: /data
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: app-data
+        persistentVolumeClaim:
+          claimName: app-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: member-management-app
+  namespace: member-management
+  labels:
+    app: member-management-app
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
+    protocol: TCP
+    name: http
+  selector:
+    app: member-management-app
+
+# Made with Bob

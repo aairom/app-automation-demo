@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Member List - Member Management{% endblock %}
+
+{% block content %}
+<h1>Member Management System</h1>
+<p style="margin-bottom: 20px; color: #666;">Manage member records with secure password and secret storage via HashiCorp Vault</p>
+
+<a href="/member/new" class="btn">Add New Member</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Date of Birth</th>
+            <th>Username</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in members %}
+        <tr>
+            <td>{{ member.id }}</td>
+            <td>{{ member.last_name }}</td>
+            <td>{{ member.first_name }}</td>
+            <td>{{ member.date_of_birth }}</td>
+            <td>{{ member.username }}</td>
+            <td>
+                <div class="actions">
+                    <a href="/member/{{ member.id }}" class="btn btn-secondary">View</a>
+                    <a href="/member/{{ member.id }}/edit" class="btn">Edit</a>
+                    <form method="POST" action="/member/{{ member.id }}/delete" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if members|length == 0 %}
+<p style="text-align: center; margin-top: 40px; color: #999;">No members found. Add your first member!</p>
+{% endif %}
+{% endblock %}
