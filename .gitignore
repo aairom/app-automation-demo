@@ -90,3 +90,6 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Folders starting with underscore
+_*/

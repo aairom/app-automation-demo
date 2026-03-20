@@ -22,7 +22,9 @@ If the application, script or the documentation needs to be updated, update the 
 
 You should refer to this "Context" document each time you need to checkout the guidelines.
 
-Update: provide a script in "scripts" folder to initiate and push the application to GitHub. The script should be flawless and don't do you usual error which is waiting for an input. Update the current documents if needed. The only parameters needed for the script are the URL for github repository and the commit comments.
+GitHub: provide a script in "scripts" folder to initiate and push the application to GitHub. The script should be flawless and don't do you usual error which is waiting for an input. Update the current documents if needed. The only parameters needed for the script are the URL for github repository and the commit comments. In the  .gitignore" file put a filter so the folder's name begining with "_" (Underscore) will not be pushed to GitHub.
+
+Remove everything: provide a script which would cleanup and remove all Docker images downloaded and update the existing documents.
 
 
 

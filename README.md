@@ -103,6 +103,24 @@ The script will:
 - Push to your GitHub repository
 - Handle conflicts automatically
 
+### Complete Cleanup
+
+To remove all Docker resources (containers, images, volumes, networks) related to the application:
+
+```bash
+./scripts/cleanup.sh
+```
+
+This script will:
+- Stop and remove all running containers
+- Remove all Docker images (application, Vault, Prometheus, Grafana, OpenTelemetry)
+- Remove all Docker volumes
+- Remove all Docker networks
+- Clean up dangling images and build cache
+- Display remaining Docker resources
+
+⚠️ **Warning**: This is a destructive operation. All data will be lost. Use with caution.
+
 ### Clone the Repository
 
 ```bash
@@ -163,6 +181,9 @@ The application comes with 5 pre-populated members:
 
 # View logs
 docker-compose logs -f
+
+# Complete cleanup (remove all Docker resources)
+./scripts/cleanup.sh
 ```
 
 ### Kubernetes (Minikube)
@@ -293,7 +314,8 @@ Comprehensive documentation is available in the `Docs/` folder:
 │   ├── stop.sh                 # Stop application
 │   ├── deploy-k8s.sh           # Deploy to Kubernetes
 │   ├── undeploy-k8s.sh         # Remove from Kubernetes
-│   └── init-github.sh          # Initialize and push to GitHub
+│   ├── init-github.sh          # Initialize and push to GitHub
+│   └── cleanup.sh              # Complete cleanup of Docker resources
 └── Docs/                       # Documentation
     ├── README.md
     ├── ARCHITECTURE.md

@@ -100,6 +100,11 @@ cd member-management-app
 ./scripts/stop.sh
 ```
 
+5. Complete cleanup (remove all Docker resources):
+```bash
+./scripts/cleanup.sh
+```
+
 ## Deployment Options
 
 ### 1. Docker Compose
@@ -115,7 +120,22 @@ See [Docker Compose Guide](./DOCKER_COMPOSE.md) for detailed instructions.
 
 # View logs
 docker-compose logs -f
+
+# Complete cleanup (remove all Docker resources)
+./scripts/cleanup.sh
 ```
+
+**Cleanup Script Details:**
+
+The cleanup script (`./scripts/cleanup.sh`) performs a complete removal of all Docker resources:
+- Stops and removes all running containers
+- Removes all Docker images (application, Vault, Prometheus, Grafana, OpenTelemetry)
+- Removes all Docker volumes
+- Removes all Docker networks
+- Cleans up dangling images and build cache
+- Displays remaining Docker resources
+
+⚠️ **Warning**: This is a destructive operation. All data will be lost. Use with caution.
 
 ### 2. Kubernetes (Minikube)
 
@@ -283,6 +303,23 @@ kubectl logs -f deployment/member-management-app -n member-management
 # View all pods
 kubectl get pods -n member-management
 ```
+
+### Complete Cleanup
+
+If you need to completely remove all Docker resources:
+
+```bash
+./scripts/cleanup.sh
+```
+
+This will remove:
+- All containers (running and stopped)
+- All images related to the application
+- All volumes
+- All networks
+- Dangling images and build cache
+
+⚠️ **Warning**: This operation is irreversible. All data will be permanently deleted.
 
 ## Contributing
 
