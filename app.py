@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 import hashlib
 import hvac
+import re
 from opentelemetry import trace, metrics
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -170,13 +171,32 @@ def init_db():
 
 @app.route('/')
 def index():
-    """Home page - list all members"""
+    """Home page - list all members with optional search"""
     with tracer.start_as_current_span("index"):
+        search_query = request.args.get('search', '').strip()
         conn = get_db_connection()
-        members = conn.execute('SELECT * FROM members ORDER BY last_name, first_name').fetchall()
+        
+        if search_query:
+            # Convert wildcard pattern to SQL LIKE pattern
+            # Replace * with % for SQL LIKE
+            sql_pattern = search_query.replace('*', '%')
+            
+            # Search in last_name, first_name, and username
+            members = conn.execute('''
+                SELECT * FROM members
+                WHERE last_name LIKE ?
+                   OR first_name LIKE ?
+                   OR username LIKE ?
+                ORDER BY last_name, first_name
+            ''', (sql_pattern, sql_pattern, sql_pattern)).fetchall()
+            
+            member_counter.add(1, {"operation": "search"})
+        else:
+            members = conn.execute('SELECT * FROM members ORDER BY last_name, first_name').fetchall()
+            member_counter.add(1, {"operation": "list"})
+        
         conn.close()
-        member_counter.add(1, {"operation": "list"})
-        return render_template('index.html', members=members)
+        return render_template('index.html', members=members, search_query=search_query)
 
 @app.route('/member/<int:member_id>')
 def view_member(member_id):

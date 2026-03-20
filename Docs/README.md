@@ -1,116 +1,233 @@
 # Member Management Application
 
-A comprehensive member management system with secure password and secret storage using HashiCorp Vault, OpenTelemetry instrumentation, and full Kubernetes deployment support.
+A production-ready member management system with secure password and secret storage using HashiCorp Vault, comprehensive OpenTelemetry instrumentation, and full Kubernetes deployment support.
 
-## Table of Contents
+![Architecture](https://img.shields.io/badge/Architecture-Microservices-blue)
+![Python](https://img.shields.io/badge/Python-3.11-green)
+![Flask](https://img.shields.io/badge/Flask-3.0-lightgrey)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5)
 
-- [Overview](#overview)
-- [Features](#features)
+## 🚀 Quick Start
+
+### Using Docker Compose (Recommended)
+
+```bash
+# Start the application
+./scripts/start.sh
+
+# Access at http://localhost:8080
+```
+
+### Using Kubernetes
+
+```bash
+# Deploy to Minikube
+./scripts/deploy-k8s.sh
+
+# Access at http://$(minikube ip):30080
+```
+
+## ✨ Features
+
+- ✅ **Full CRUD Operations** - Create, Read, Update, Delete member records
+- 🔍 **Advanced Search** - Search by last name, first name, or username with wildcard support
+- 🔐 **Secure Storage** - Passwords hashed with SHA-256, secrets in HashiCorp Vault
+- 📊 **Complete Observability** - OpenTelemetry with Prometheus & Grafana
+- 🐳 **Containerized** - Docker and Docker Compose ready
+- ☸️ **Kubernetes Native** - Complete K8s manifests included
+- 🏗️ **Infrastructure as Code** - Terraform scripts for automated deployment
+- 🤖 **Automation** - Ansible playbooks for lifecycle management
+- 🎨 **Modern UI** - Clean, responsive web interface
+- 📦 **Pre-populated Data** - 5 sample member records included
+
+## 📋 Table of Contents
+
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Deployment Options](#deployment-options)
-- [Configuration](#configuration)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
 - [Monitoring](#monitoring)
-- [Security](#security)
-- [Development](#development)
-- [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
 
-## Overview
-
-The Member Management Application is a production-ready web application built with Flask that provides CRUD operations for managing member records. It integrates with HashiCorp Vault for secure secret storage and implements OpenTelemetry for comprehensive observability.
-
-## Features
-
-- **Member Management**: Create, read, update, and delete member records
-- **Secure Storage**: Passwords hashed with SHA-256, secrets stored in HashiCorp Vault
-- **Database**: SQLite database with 5 pre-populated sample records
-- **Observability**: Full OpenTelemetry instrumentation with Prometheus and Grafana
-- **Containerization**: Docker and Docker Compose support
-- **Kubernetes Ready**: Complete K8s manifests and Helm-ready configuration
-- **Infrastructure as Code**: Terraform scripts for automated deployment
-- **Automation**: Ansible playbooks for lifecycle management
-- **Modern UI**: Clean, responsive web interface
-
-## Architecture
-
-See [Architecture Documentation](./ARCHITECTURE.md) for detailed architecture diagrams and component descriptions.
-
-### High-Level Architecture
+## 🏗️ Architecture
 
 ```mermaid
 graph TB
-    User[User] --> App[Member Management App]
+    User[User] --> App[Member Management App<br/>Flask + Python]
     App --> DB[(SQLite Database)]
-    App --> Vault[HashiCorp Vault]
+    App --> Vault[HashiCorp Vault<br/>Secret Storage]
     App --> OTel[OpenTelemetry Collector]
-    OTel --> Prom[Prometheus]
-    Prom --> Graf[Grafana]
+    OTel --> Prom[Prometheus<br/>Metrics]
+    Prom --> Graf[Grafana<br/>Dashboards]
     
-    style App fill:#667eea
+    style App fill:#667eea,color:#fff
     style Vault fill:#ffd700
     style Prom fill:#e6522c
     style Graf fill:#f46800
 ```
 
-## Prerequisites
+See [Architecture Documentation](./Docs/ARCHITECTURE.md) for detailed diagrams and explanations.
 
-### For Docker Compose Deployment
+## 📦 Prerequisites
+
+### For Docker Compose
 - Docker 20.10+
 - Docker Compose 2.0+
 
-### For Kubernetes Deployment
+### For Kubernetes
 - Minikube 1.25+ or any Kubernetes cluster
 - kubectl 1.24+
 - Docker 20.10+
 
-### For Terraform Deployment
-- Terraform 1.0+
-- Minikube 1.25+
-- kubectl 1.24+
+### For Development
+- Python 3.11+
+- pip
 
-### For Ansible Deployment
-- Ansible 2.9+
-- Python 3.8+
-- kubernetes Python module
+## 🔧 Installation
 
-## Quick Start
+### Initialize and Push to GitHub
 
-### Using Docker Compose (Recommended for Development)
+If you want to push this project to your own GitHub repository:
 
-1. Clone the repository:
+```bash
+# Initialize git and push to GitHub
+./scripts/init-github.sh https://github.com/username/repo.git "Initial commit"
+```
+
+The script will:
+- Initialize git repository (if not already initialized)
+- Add all files to git
+- Commit with your message
+- Push to your GitHub repository
+- Handle conflicts automatically
+
+### Complete Cleanup
+
+To remove all Docker resources (containers, images, volumes, networks) related to the application:
+
+```bash
+./scripts/cleanup.sh
+```
+
+This script will:
+- Stop and remove all running containers
+- Remove all Docker images (application, Vault, Prometheus, Grafana, OpenTelemetry)
+- Remove all Docker volumes
+- Remove all Docker networks
+- Clean up dangling images and build cache
+- Display remaining Docker resources
+
+⚠️ **Warning**: This is a destructive operation. All data will be lost. Use with caution.
+
+### Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd member-management-app
 ```
 
-2. Start the application:
+### Local Development Setup
+
 ```bash
-./scripts/start.sh
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python app.py
 ```
 
-3. Access the application:
-- Application: http://localhost:8080
-- Admin Dashboard: http://localhost:8080/admin (All monitoring tools with credentials)
-- Vault: http://localhost:8200 (Token: `dev-token`)
-- Prometheus: http://localhost:9090 (No authentication)
-- Grafana: http://localhost:3000 (Username: `admin`, Password: `admin`)
+## 🎯 Usage
 
-4. Stop the application:
-```bash
-./scripts/stop.sh
+### Access the Application
+
+- **Application UI**: http://localhost:8080
+- **Admin Dashboard**: http://localhost:8080/admin (Access all monitoring tools with credentials)
+- **Prometheus**: http://localhost:9090 (No authentication required)
+- **Grafana**: http://localhost:3000 (Username: `admin`, Password: `admin`)
+- **Vault**: http://localhost:8200 (Token: `dev-token`)
+
+### Admin Dashboard Features
+
+**Access:** http://localhost:8080/admin
+
+The application includes a comprehensive **Admin Dashboard** that provides centralized access to all monitoring and management tools with their credentials clearly displayed.
+
+**Monitoring Tools with Credentials:**
+
+1. **📊 Grafana** - Visualization and monitoring dashboards
+   - **Username:** `admin`
+   - **Password:** `admin`
+   - **URL:** http://localhost:3000
+   - **Purpose:** View pre-configured dashboards for member operations, system metrics, and application performance
+
+2. **📈 Prometheus** - Metrics collection and querying
+   - **Authentication:** None required
+   - **URL:** http://localhost:9090
+   - **Purpose:** Query raw metrics, create custom queries, and explore time-series data
+
+3. **🔐 HashiCorp Vault** - Secret management system
+   - **Token:** `dev-token`
+   - **URL:** http://localhost:8200
+   - **Purpose:** Manage secrets, view stored credentials, and configure secret engines
+
+4. **📡 Application Metrics** - Direct metrics endpoint
+   - **Authentication:** None required
+   - **URL:** http://localhost:8080/metrics
+   - **Purpose:** Access raw OpenTelemetry metrics exported by the application
+
+**Dashboard Design:**
+- Clean, modern card-based layout with color-coded service icons
+- Credentials displayed prominently for easy copy-paste
+- Direct links to open each dashboard in new browser tabs
+- Responsive grid layout that adapts to different screen sizes
+- Security warning about default credentials for production use
+
+⚠️ **Security Notice**: These are default credentials for the sample application. **Change all credentials before production deployment!**
+
+### Member Operations
+
+1. **View Members**: Navigate to the home page to see all members
+2. **Search Members**: Use the search bar to find members by:
+   - **Last Name**: e.g., "Smith"
+   - **First Name**: e.g., "John"
+   - **Username**: e.g., "jsmith"
+   - **Wildcards**: Use `*` for pattern matching
+     - `Sm*` - finds "Smith", "Small", etc.
+     - `*son` - finds "Johnson", "Wilson", etc.
+     - `*oh*` - finds "John", "Johanna", etc.
+3. **Add Member**: Click "Add New Member" and fill in the form
+4. **View Details**: Click "View" on any member to see full details including secrets
+5. **Edit Member**: Click "Edit" to modify member information
+6. **Delete Member**: Click "Delete" to remove a member (with confirmation)
+
+**Search Examples:**
+```
+Smith          → Finds exact match "Smith"
+Sm*            → Finds "Smith", "Small", "Smart"
+*son           → Finds "Johnson", "Wilson", "Anderson"
+J*             → Finds "John", "Jane", "James"
+*oh*           → Finds "John", "Johanna", "Cohen"
 ```
 
-5. Complete cleanup (remove all Docker resources):
-```bash
-./scripts/cleanup.sh
-```
+### Sample Members
 
-## Deployment Options
+The application comes with 5 pre-populated members:
+- John Smith (jsmith)
+- Emily Johnson (ejohnson)
+- Michael Williams (mwilliams)
+- Sarah Brown (sbrown)
+- Robert Davis (rdavis)
 
-### 1. Docker Compose
+## 🚢 Deployment
 
-See [Docker Compose Guide](./DOCKER_COMPOSE.md) for detailed instructions.
+### Docker Compose
 
 ```bash
 # Start all services
@@ -126,44 +243,32 @@ docker-compose logs -f
 ./scripts/cleanup.sh
 ```
 
-**Cleanup Script Details:**
-
-The cleanup script (`./scripts/cleanup.sh`) performs a complete removal of all Docker resources:
-- Stops and removes all running containers
-- Removes all Docker images (application, Vault, Prometheus, Grafana, OpenTelemetry)
-- Removes all Docker volumes
-- Removes all Docker networks
-- Cleans up dangling images and build cache
-- Displays remaining Docker resources
-
-⚠️ **Warning**: This is a destructive operation. All data will be lost. Use with caution.
-
-### 2. Kubernetes (Minikube)
-
-See [Kubernetes Deployment Guide](./KUBERNETES.md) for detailed instructions.
+### Kubernetes (Minikube)
 
 ```bash
-# Deploy to Kubernetes
+# Deploy
 ./scripts/deploy-k8s.sh
 
-# Undeploy from Kubernetes
+# Undeploy
 ./scripts/undeploy-k8s.sh
+
+# View pods
+kubectl get pods -n member-management
 ```
 
-### 3. Terraform
-
-See [Terraform Guide](./TERRAFORM.md) for detailed instructions.
+### Terraform
 
 ```bash
 cd Terraform
 terraform init
 terraform plan
 terraform apply
+
+# Get outputs
+terraform output
 ```
 
-### 4. Ansible
-
-See [Ansible Guide](./ANSIBLE.md) for detailed instructions.
+### Ansible
 
 ```bash
 # Deploy
@@ -176,183 +281,134 @@ ansible-playbook -i Ansible/inventory.yml Ansible/update.yml
 ansible-playbook -i Ansible/inventory.yml Ansible/undeploy.yml
 ```
 
-## Configuration
-
-### Admin Dashboard
-
-The application includes a comprehensive **Admin Dashboard** at http://localhost:8080/admin that provides:
-
-**Quick Access to All Monitoring Tools:**
-- 📊 **Grafana** - Visualization dashboards (admin/admin)
-- 📈 **Prometheus** - Metrics collection (no auth required)
-- 🔐 **Vault** - Secret management (Token: dev-token)
-- 📡 **Application Metrics** - Direct metrics endpoint
-
-**Default Credentials (Sample Application):**
-- Grafana: Username `admin`, Password `admin`
-- Vault: Token `dev-token`
-- Prometheus: No authentication required
-
-⚠️ **Security Notice**: Change all default credentials before production deployment!
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_PATH` | Path to SQLite database | `/data/members.db` |
-| `PORT` | Application port | `8080` |
-| `VAULT_ADDR` | Vault server address | `http://localhost:8200` |
-| `VAULT_TOKEN` | Vault authentication token | `dev-token` |
-| `VAULT_MOUNT_POINT` | Vault secret mount point | `secret` |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | OpenTelemetry collector endpoint | `http://localhost:4317` |
-| `FLASK_SECRET_KEY` | Flask session secret key | `dev-secret-key` |
-
-### Database Schema
-
-```sql
-CREATE TABLE members (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    last_name TEXT NOT NULL,
-    first_name TEXT NOT NULL,
-    date_of_birth TEXT NOT NULL,
-    username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-## Monitoring
+## 📊 Monitoring
 
 ### Prometheus Metrics
 
-The application exposes the following metrics:
-- `member_management_member_operations_total`: Counter for member operations (create, read, update, delete)
-- Standard OpenTelemetry metrics for HTTP requests, database queries, and system resources
+Access Prometheus at http://localhost:9090 to query metrics:
+
+```promql
+# Member operations rate
+rate(member_management_member_operations_total[5m])
+
+# Total operations by type
+sum(member_management_member_operations_total) by (operation)
+```
 
 ### Grafana Dashboards
 
-Pre-configured dashboards are available at http://localhost:3000 (or NodePort 30030 in Kubernetes):
+Access Grafana at http://localhost:3000 (admin/admin) to view:
 - Member Operations Dashboard
-- System Metrics Dashboard
-- Application Performance Dashboard
+- System Metrics
+- Application Performance
 
-Default credentials: `admin/admin`
+## 📚 Documentation
 
-## Security
+Comprehensive documentation is available in the `Docs/` folder:
 
-### Password Security
-- Passwords are hashed using SHA-256 before storage
-- Never stored in plain text in the database
+- [**README.md**](./Docs/README.md) - Complete user guide
+- [**ARCHITECTURE.md**](./Docs/ARCHITECTURE.md) - Architecture diagrams and design decisions
+- [**KUBERNETES.md**](./Docs/KUBERNETES.md) - Kubernetes deployment guide
 
-### Secret Management
-- Secrets stored in HashiCorp Vault
-- Vault runs in dev mode for development (use production mode for production)
-- Secrets encrypted at rest and in transit
+## 🔒 Security
 
-### Kubernetes Secrets
-- Sensitive configuration stored in Kubernetes Secrets
-- Base64 encoded and encrypted by Kubernetes
+- **Passwords**: Hashed using SHA-256 before storage
+- **Secrets**: Stored securely in HashiCorp Vault
+- **Vault**: Runs in dev mode for development (use production mode for production)
+- **Kubernetes Secrets**: Base64 encoded and encrypted by Kubernetes
 
-## Development
+⚠️ **Important**: Change default credentials before production deployment!
 
-### Local Development Setup
+## 🛠️ Technology Stack
 
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+| Component | Technology |
+|-----------|-----------|
+| **Backend** | Python 3.11, Flask 3.0 |
+| **Database** | SQLite 3 |
+| **Secret Management** | HashiCorp Vault |
+| **Observability** | OpenTelemetry, Prometheus, Grafana |
+| **Containerization** | Docker, Docker Compose |
+| **Orchestration** | Kubernetes |
+| **IaC** | Terraform |
+| **Automation** | Ansible |
+
+## 📁 Project Structure
+
+```
+.
+├── app.py                      # Main Flask application
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker image definition
+├── docker-compose.yml          # Docker Compose configuration
+├── templates/                  # HTML templates
+│   ├── base.html
+│   ├── index.html
+│   ├── admin.html
+│   ├── view_member.html
+│   ├── create_member.html
+│   └── edit_member.html
+├── k8s/                        # Kubernetes manifests
+│   ├── namespace.yaml
+│   ├── configmap.yaml
+│   ├── secrets.yaml
+│   ├── pvc.yaml
+│   ├── app-deployment.yaml
+│   ├── vault-deployment.yaml
+│   ├── otel-collector-deployment.yaml
+│   ├── prometheus-deployment.yaml
+│   └── grafana-deployment.yaml
+├── Terraform/                  # Terraform scripts
+│   ├── main.tf
+│   ├── deployments.tf
+│   ├── variables.tf
+│   └── outputs.tf
+├── Ansible/                    # Ansible playbooks
+│   ├── inventory.yml
+│   ├── deploy.yml
+│   ├── update.yml
+│   └── undeploy.yml
+├── scripts/                    # Utility scripts
+│   ├── start.sh                # Start application with Docker Compose
+│   ├── stop.sh                 # Stop application
+│   ├── deploy-k8s.sh           # Deploy to Kubernetes
+│   ├── undeploy-k8s.sh         # Remove from Kubernetes
+│   ├── init-github.sh          # Initialize and push to GitHub
+│   └── cleanup.sh              # Complete cleanup of Docker resources
+└── Docs/                       # Documentation
+    ├── README.md
+    ├── ARCHITECTURE.md
+    └── KUBERNETES.md
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## 🤝 Contributing
 
-3. Run the application:
-```bash
-python app.py
-```
-
-### Running Tests
-
-```bash
-# Unit tests
-pytest tests/
-
-# Integration tests
-pytest tests/integration/
-```
-
-### Building Docker Image
-
-```bash
-docker build -t member-management-app:latest .
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Port 8080 already in use**
-   - Change the port in docker-compose.yml or set PORT environment variable
-
-2. **Vault connection failed**
-   - Ensure Vault is running and accessible
-   - Check VAULT_ADDR and VAULT_TOKEN environment variables
-
-3. **Database locked error**
-   - Ensure only one instance is accessing the database
-   - Check file permissions on the database file
-
-4. **Kubernetes pods not starting**
-   - Check pod logs: `kubectl logs -f <pod-name> -n member-management`
-   - Verify image is loaded: `minikube image ls`
-
-### Logs
-
-```bash
-# Docker Compose
-docker-compose logs -f [service-name]
-
-# Kubernetes
-kubectl logs -f deployment/member-management-app -n member-management
-
-# View all pods
-kubectl get pods -n member-management
-```
-
-### Complete Cleanup
-
-If you need to completely remove all Docker resources:
-
-```bash
-./scripts/cleanup.sh
-```
-
-This will remove:
-- All containers (running and stopped)
-- All images related to the application
-- All volumes
-- All networks
-- Dangling images and build cache
-
-⚠️ **Warning**: This operation is irreversible. All data will be permanently deleted.
-
-## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+## 🙏 Acknowledgments
+
+- Flask framework for the web application
+- HashiCorp Vault for secret management
+- OpenTelemetry for observability
+- Prometheus and Grafana for monitoring
+- Kubernetes community for orchestration tools
+
+## 📞 Support
 
 For issues and questions:
 - Create an issue in the repository
-- Check the [Troubleshooting](#troubleshooting) section
-- Review the detailed documentation in the Docs folder
+- Check the [Documentation](./Docs/)
+- Review the [Troubleshooting](./Docs/README.md#troubleshooting) section
+
+---
+
+**Built with ❤️ using Python, Flask, and Cloud-Native Technologies**

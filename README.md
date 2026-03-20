@@ -31,6 +31,7 @@ A production-ready member management system with secure password and secret stor
 ## ✨ Features
 
 - ✅ **Full CRUD Operations** - Create, Read, Update, Delete member records
+- 🔍 **Advanced Search** - Search by last name, first name, or username with wildcard support
 - 🔐 **Secure Storage** - Passwords hashed with SHA-256, secrets in HashiCorp Vault
 - 📊 **Complete Observability** - OpenTelemetry with Prometheus & Grafana
 - 🐳 **Containerized** - Docker and Docker Compose ready
@@ -193,10 +194,27 @@ The application includes a comprehensive **Admin Dashboard** that provides centr
 ### Member Operations
 
 1. **View Members**: Navigate to the home page to see all members
-2. **Add Member**: Click "Add New Member" and fill in the form
-3. **View Details**: Click "View" on any member to see full details including secrets
-4. **Edit Member**: Click "Edit" to modify member information
-5. **Delete Member**: Click "Delete" to remove a member (with confirmation)
+2. **Search Members**: Use the search bar to find members by:
+   - **Last Name**: e.g., "Smith"
+   - **First Name**: e.g., "John"
+   - **Username**: e.g., "jsmith"
+   - **Wildcards**: Use `*` for pattern matching
+     - `Sm*` - finds "Smith", "Small", etc.
+     - `*son` - finds "Johnson", "Wilson", etc.
+     - `*oh*` - finds "John", "Johanna", etc.
+3. **Add Member**: Click "Add New Member" and fill in the form
+4. **View Details**: Click "View" on any member to see full details including secrets
+5. **Edit Member**: Click "Edit" to modify member information
+6. **Delete Member**: Click "Delete" to remove a member (with confirmation)
+
+**Search Examples:**
+```
+Smith          → Finds exact match "Smith"
+Sm*            → Finds "Smith", "Small", "Smart"
+*son           → Finds "Johnson", "Wilson", "Anderson"
+J*             → Finds "John", "Jane", "James"
+*oh*           → Finds "John", "Johanna", "Cohen"
+```
 
 ### Sample Members
 
