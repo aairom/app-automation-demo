@@ -152,27 +152,43 @@ python app.py
 - **Grafana**: http://localhost:3000 (Username: `admin`, Password: `admin`)
 - **Vault**: http://localhost:8200 (Token: `dev-token`)
 
-### Admin Dashboard
+### Admin Dashboard Features
 
-The application includes a dedicated **Admin Dashboard** accessible at http://localhost:8080/admin that provides:
+**Access:** http://localhost:8080/admin
 
-- 📊 **Grafana** - Visualization and monitoring dashboards
-  - Username: `admin`
-  - Password: `admin`
-  - URL: http://localhost:3000
+The application includes a comprehensive **Admin Dashboard** that provides centralized access to all monitoring and management tools with their credentials clearly displayed.
 
-- 📈 **Prometheus** - Metrics collection and querying
-  - No authentication required
-  - URL: http://localhost:9090
+**Monitoring Tools with Credentials:**
 
-- 🔐 **HashiCorp Vault** - Secret management system
-  - Token: `dev-token`
-  - URL: http://localhost:8200
+1. **📊 Grafana** - Visualization and monitoring dashboards
+   - **Username:** `admin`
+   - **Password:** `admin`
+   - **URL:** http://localhost:3000
+   - **Purpose:** View pre-configured dashboards for member operations, system metrics, and application performance
 
-- 📡 **Application Metrics** - Direct metrics endpoint
-  - URL: http://localhost:8080/metrics
+2. **📈 Prometheus** - Metrics collection and querying
+   - **Authentication:** None required
+   - **URL:** http://localhost:9090
+   - **Purpose:** Query raw metrics, create custom queries, and explore time-series data
 
-⚠️ **Security Notice**: These are default credentials for the sample application. Change them before production deployment!
+3. **🔐 HashiCorp Vault** - Secret management system
+   - **Token:** `dev-token`
+   - **URL:** http://localhost:8200
+   - **Purpose:** Manage secrets, view stored credentials, and configure secret engines
+
+4. **📡 Application Metrics** - Direct metrics endpoint
+   - **Authentication:** None required
+   - **URL:** http://localhost:8080/metrics
+   - **Purpose:** Access raw OpenTelemetry metrics exported by the application
+
+**Dashboard Design:**
+- Clean, modern card-based layout with color-coded service icons
+- Credentials displayed prominently for easy copy-paste
+- Direct links to open each dashboard in new browser tabs
+- Responsive grid layout that adapts to different screen sizes
+- Security warning about default credentials for production use
+
+⚠️ **Security Notice**: These are default credentials for the sample application. **Change all credentials before production deployment!**
 
 ### Member Operations
 
