@@ -91,9 +91,10 @@ cd member-management-app
 
 3. Access the application:
 - Application: http://localhost:8080
-- Vault: http://localhost:8200
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3000 (admin/admin)
+- Admin Dashboard: http://localhost:8080/admin (All monitoring tools with credentials)
+- Vault: http://localhost:8200 (Token: `dev-token`)
+- Prometheus: http://localhost:9090 (No authentication)
+- Grafana: http://localhost:3000 (Username: `admin`, Password: `admin`)
 
 4. Stop the application:
 ```bash
@@ -176,6 +177,23 @@ ansible-playbook -i Ansible/inventory.yml Ansible/undeploy.yml
 ```
 
 ## Configuration
+
+### Admin Dashboard
+
+The application includes a comprehensive **Admin Dashboard** at http://localhost:8080/admin that provides:
+
+**Quick Access to All Monitoring Tools:**
+- 📊 **Grafana** - Visualization dashboards (admin/admin)
+- 📈 **Prometheus** - Metrics collection (no auth required)
+- 🔐 **Vault** - Secret management (Token: dev-token)
+- 📡 **Application Metrics** - Direct metrics endpoint
+
+**Default Credentials (Sample Application):**
+- Grafana: Username `admin`, Password `admin`
+- Vault: Token `dev-token`
+- Prometheus: No authentication required
+
+⚠️ **Security Notice**: Change all default credentials before production deployment!
 
 ### Environment Variables
 

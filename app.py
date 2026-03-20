@@ -294,6 +294,12 @@ def delete_member(member_id):
         conn.close()
         return redirect(url_for('index'))
 
+@app.route('/admin')
+def admin():
+    """Admin dashboard with links to monitoring tools"""
+    with tracer.start_as_current_span("admin"):
+        return render_template('admin.html')
+
 @app.route('/health')
 def health():
     """Health check endpoint"""

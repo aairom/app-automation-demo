@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Member Management{% endblock %}
+
+{% block content %}
+<h1>🔧 Admin Dashboard</h1>
+
+<div style="margin-bottom: 30px;">
+    <p style="color: #666; font-size: 14px;">
+        Access monitoring and management tools for the Member Management Application.
+        All dashboards are pre-configured with default credentials for this sample application.
+    </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    <!-- Grafana Card -->
+    <div class="dashboard-card">
+        <div class="dashboard-icon" style="background: linear-gradient(135deg, #f46800 0%, #ff8c00 100%);">
+            📊
+        </div>
+        <h3>Grafana</h3>
+        <p class="dashboard-description">
+            Visualization and monitoring dashboards for application metrics and performance.
+        </p>
+        <div class="credentials">
+            <div class="credential-row">
+                <span class="credential-label">Username:</span>
+                <code class="credential-value">admin</code>
+            </div>
+            <div class="credential-row">
+                <span class="credential-label">Password:</span>
+                <code class="credential-value">admin</code>
+            </div>
+            <div class="credential-row">
+                <span class="credential-label">URL:</span>
+                <code class="credential-value">http://localhost:3000</code>
+            </div>
+        </div>
+        <a href="http://localhost:3000" target="_blank" class="btn btn-dashboard">
+            Open Grafana →
+        </a>
+    </div>
+
+    <!-- Prometheus Card -->
+    <div class="dashboard-card">
+        <div class="dashboard-icon" style="background: linear-gradient(135deg, #e6522c 0%, #ff6b45 100%);">
+            📈
+        </div>
+        <h3>Prometheus</h3>
+        <p class="dashboard-description">
+            Metrics collection and querying system for monitoring application performance.
+        </p>
+        <div class="credentials">
+            <div class="credential-row">
+                <span class="credential-label">Authentication:</span>
+                <code class="credential-value">None required</code>
+            </div>
+            <div class="credential-row">
+                <span class="credential-label">URL:</span>
+                <code class="credential-value">http://localhost:9090</code>
+            </div>
+        </div>
+        <a href="http://localhost:9090" target="_blank" class="btn btn-dashboard">
+            Open Prometheus →
+        </a>
+    </div>
+
+    <!-- Vault Card -->
+    <div class="dashboard-card">
+        <div class="dashboard-icon" style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);">
+            🔐
+        </div>
+        <h3>HashiCorp Vault</h3>
+        <p class="dashboard-description">
+            Secret management system for secure storage of passwords and sensitive data.
+        </p>
+        <div class="credentials">
+            <div class="credential-row">
+                <span class="credential-label">Token:</span>
+                <code class="credential-value">dev-token</code>
+            </div>
+            <div class="credential-row">
+                <span class="credential-label">URL:</span>
+                <code class="credential-value">http://localhost:8200</code>
+            </div>
+        </div>
+        <a href="http://localhost:8200" target="_blank" class="btn btn-dashboard">
+            Open Vault →
+        </a>
+    </div>
+
+    <!-- Application Metrics Card -->
+    <div class="dashboard-card">
+        <div class="dashboard-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            📡
+        </div>
+        <h3>Application Metrics</h3>
+        <p class="dashboard-description">
+            Direct access to application metrics endpoint for OpenTelemetry data.
+        </p>
+        <div class="credentials">
+            <div class="credential-row">
+                <span class="credential-label">Authentication:</span>
+                <code class="credential-value">None required</code>
+            </div>
+            <div class="credential-row">
+                <span class="credential-label">URL:</span>
+                <code class="credential-value">http://localhost:8080/metrics</code>
+            </div>
+        </div>
+        <a href="http://localhost:8080/metrics" target="_blank" class="btn btn-dashboard">
+            View Metrics →
+        </a>
+    </div>
+</div>
+
+<div style="margin-top: 40px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+    <h3 style="color: #856404; margin-bottom: 10px;">⚠️ Security Notice</h3>
+    <p style="color: #856404; font-size: 14px; line-height: 1.6;">
+        This is a <strong>sample application</strong> with default credentials for demonstration purposes only.
+        <br><br>
+        <strong>For production use:</strong>
+        <ul style="margin-top: 10px; margin-left: 20px;">
+            <li>Change all default passwords and tokens</li>
+            <li>Enable proper authentication and authorization</li>
+            <li>Use production mode for Vault (not dev mode)</li>
+            <li>Implement SSL/TLS for all connections</li>
+            <li>Follow security best practices for your environment</li>
+        </ul>
+    </p>
+</div>
+
+<style>
+    .dashboard-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 25px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .dashboard-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+    
+    .dashboard-card h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+    
+    .dashboard-description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        min-height: 60px;
+    }
+    
+    .credentials {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .credential-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+    
+    .credential-row:last-child {
+        margin-bottom: 0;
+    }
+    
+    .credential-label {
+        font-weight: 600;
+        color: #555;
+        min-width: 100px;
+    }
+    
+    .credential-value {
+        background: white;
+        padding: 4px 8px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        color: #333;
+    }
+    
+    .btn-dashboard {
+        width: 100%;
+        text-align: center;
+        display: block;
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}

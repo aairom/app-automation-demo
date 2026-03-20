@@ -147,9 +147,32 @@ python app.py
 ### Access the Application
 
 - **Application UI**: http://localhost:8080
-- **Prometheus**: http://localhost:9090
-- **Grafana**: http://localhost:3000 (admin/admin)
-- **Vault**: http://localhost:8200
+- **Admin Dashboard**: http://localhost:8080/admin (Access all monitoring tools with credentials)
+- **Prometheus**: http://localhost:9090 (No authentication required)
+- **Grafana**: http://localhost:3000 (Username: `admin`, Password: `admin`)
+- **Vault**: http://localhost:8200 (Token: `dev-token`)
+
+### Admin Dashboard
+
+The application includes a dedicated **Admin Dashboard** accessible at http://localhost:8080/admin that provides:
+
+- 📊 **Grafana** - Visualization and monitoring dashboards
+  - Username: `admin`
+  - Password: `admin`
+  - URL: http://localhost:3000
+
+- 📈 **Prometheus** - Metrics collection and querying
+  - No authentication required
+  - URL: http://localhost:9090
+
+- 🔐 **HashiCorp Vault** - Secret management system
+  - Token: `dev-token`
+  - URL: http://localhost:8200
+
+- 📡 **Application Metrics** - Direct metrics endpoint
+  - URL: http://localhost:8080/metrics
+
+⚠️ **Security Notice**: These are default credentials for the sample application. Change them before production deployment!
 
 ### Member Operations
 
@@ -286,6 +309,7 @@ Comprehensive documentation is available in the `Docs/` folder:
 ├── templates/                  # HTML templates
 │   ├── base.html
 │   ├── index.html
+│   ├── admin.html
 │   ├── view_member.html
 │   ├── create_member.html
 │   └── edit_member.html
